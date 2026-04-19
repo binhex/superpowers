@@ -9,11 +9,29 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 Guide completion of development work by presenting clear options and handling chosen workflow.
 
-**Core principle:** Verify tests → Present options → Execute choice → Clean up.
+**Core principle:** Adversarial review → Verify tests → Present options → Execute choice → Clean up.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
 ## The Process
+
+### Step 0: Adversarial Review (MANDATORY)
+
+**Before anything else**, invoke `superpowers:adversarial-review` if code changes were made.
+
+**Do NOT skip this because:**
+- Other reviews (spec compliance, code quality, rubber duck) were already done — they do NOT replace adversarial review
+- The subagent-driven-development workflow ran its own review chain — that does NOT replace adversarial review
+- Tests are passing — passing tests do not replace adversarial review
+
+**The adversarial review skill lists these as explicit red flags:**
+> "Other reviews cover it, I do not need to run Adversarial Review"
+> "I've used Rubber Duck, I don't need to perform an Adversarial Review"
+
+**Exemptions (skip Step 0 only if ALL changes are):**
+- Test-only, documentation-only, comment-only, or single-line changes
+
+If exemption applies, state it explicitly: `"Skipping adversarial review — changes are [reason]."` then continue to Step 1.
 
 ### Step 1: Verify Tests
 

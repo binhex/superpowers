@@ -163,6 +163,8 @@ The loop is not optional. It exists **for** the moments when you are tired and t
 ## Red Flags — Stop and Re-read This Skill
 
 - "Other reviews cover it, I do not need to run Adversarial Review"
+- "I ran spec compliance + code quality reviews via subagent-driven-development — that's enough"
+- "The final code reviewer in subagent-driven-development already approved it"
 - "This issue is minor, I'll skip it"
 - "I feel like enough rounds have run" (check: has MAX_ROUNDS actually been reached?)
 - "This is just a bug fix, not a code change"
@@ -172,6 +174,12 @@ The loop is not optional. It exists **for** the moments when you are tired and t
 - "I've used Rubber Duck, I don't need to perform an Adversarial Review"
 
 **All of these mean: you are about to violate the loop. RUN ADVERSARIAL REVIEW.**
+
+### The Subagent-Driven-Development Bypass Trap
+
+When following `subagent-driven-development`, each task gets a spec review, a code quality review, and a final code review. This feels thorough — and it is, for those concerns. **But it is NOT a substitute for adversarial review.**
+
+The `finishing-a-development-branch` skill (which subagent-driven-development calls at the end) now enforces adversarial review as Step 0. If you reach that skill without having run adversarial review, it will stop you. But do not wait for that stop — invoke adversarial review proactively after implementation is complete, before finishing the branch.
 
 ## Common Rationalizations
 
