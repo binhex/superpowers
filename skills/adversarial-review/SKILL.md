@@ -1,19 +1,19 @@
 ---
 name: adversarial-review
-description: Use after any major code change — logic changes, refactors, bug fixes, or new features that are not purely test changes, documentation changes, comment changes, or single-line changes.
+description: You MUST use after ANY code change — The only exemptions are test only changes, documentation only changes, comment-only changes, single-line changes, and non-code related tasks.
 ---
 
 # Adversarial Review
 
 ## Overview
 
-After a major code change, YOU (the main agent) run a dual-model adversarial review loop directly in the current session. Do NOT delegate this skill to a sub-agent — the orchestration MUST happen in your session so the user can see live progress.
+After ANY code change, YOU (the main agent) run a dual-model adversarial review loop directly in the current session. Do NOT delegate this skill to a sub-agent — the orchestration MUST happen in your session so the user can see live progress.
 
 Two independent reviewer sub-agents (GPT-5.4 and Claude Opus 4.6) are dispatched in parallel for each round. You gather their findings, de-duplicate, fix every issue reported, narrate progress throughout, then repeat — until **both reviewers return zero issues in the same round OR the max number of loops is reached**.
 
 **Core principle:** Violating the letter of this process is violating the spirit of it.
 
-## What Counts as a Major Code Change?
+## What Counts as  Code Change?
 
 **REQUIRES adversarial review (all code logic changes):**
 - Bug fixes
@@ -30,7 +30,7 @@ Two independent reviewer sub-agents (GPT-5.4 and Claude Opus 4.6) are dispatched
 - Single-line changes
 - Non code related tasks
 
-**If in doubt: it's major. Run the review.**
+**If in doubt: it's a code change. Run the review.**
 
 ## The Loop
 
@@ -162,15 +162,16 @@ The loop is not optional. It exists **for** the moments when you are tired and t
 
 ## Red Flags — Stop and Re-read This Skill
 
+- "Other reviews cover it, I do not need to run Adversarial Review"
 - "This issue is minor, I'll skip it"
 - "I feel like enough rounds have run" (check: has MAX_ROUNDS actually been reached?)
-- "This is just a bug fix, not a major change"
+- "This is just a bug fix, not a code change"
 - "The first model came back clean so the second is redundant"
 - "Noise, not signal"
 - "Being pragmatic"
-- "I've used Rubber Duck, i don't need to perform an Adversarial Review"
+- "I've used Rubber Duck, I don't need to perform an Adversarial Review"
 
-**All of these mean: you are about to violate the loop. Don't.**
+**All of these mean: you are about to violate the loop. RUN ADVERSARIAL REVIEW.**
 
 ## Common Rationalizations
 
@@ -178,7 +179,7 @@ The loop is not optional. It exists **for** the moments when you are tired and t
 |--------|---------|
 | "It's just a style issue" | Fix it. It clears in one round. Loop ends faster than arguing about it. |
 | "N rounds is enough" (cap not reached) | The stopping condition is zero issues or MAX_ROUNDS — not your fatigue. |
-| "Bug fix isn't major" | Bug fixes change logic. Logic changes require review. |
+| "Bug fix isn't a code change" | Bug fixes change logic. Logic changes require review. |
 | "First model was clean" | Two models catch different failure classes. One clean ≠ done. |
 | "Senior engineer approved" | Informal review ≠ adversarial diff review. Both are needed. |
 | "We're behind schedule" | The loop takes minutes. Shipping unreviewed code costs hours. |
