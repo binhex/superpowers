@@ -7,13 +7,13 @@ description: You MUST use after ANY code change — The only exemptions are test
 
 ## Overview
 
-After ANY code change, YOU (the main agent) run a dual-model adversarial review loop directly in the current session. Do NOT delegate this skill to a sub-agent — the orchestration MUST happen in your session so the user can see live progress.
+After ANY code change (excluding exemptions), YOU MUST (the main agent) RUN a dual-model adversarial review loop directly in the current session. Do NOT delegate this skill to a sub-agent — the orchestration MUST happen in your session so the user can see live progress.
 
 Two independent reviewer sub-agents (GPT-5.4 and Claude Opus 4.6) are dispatched in parallel for each round. You gather their findings, de-duplicate, fix every issue reported, narrate progress throughout, then repeat — until **both reviewers return zero issues in the same round OR the max number of loops is reached**.
 
-**Core principle:** Violating the letter of this process is violating the spirit of it.
+**Core principle:** Determine max rounds → Get Diff → Run loop with sub agents → Continue until all issues fixed or max loop value reached.
 
-## What Counts as  Code Change?
+## What Counts as a Code Change?
 
 **REQUIRES adversarial review (all code logic changes):**
 - Bug fixes
@@ -32,57 +32,19 @@ Two independent reviewer sub-agents (GPT-5.4 and Claude Opus 4.6) are dispatched
 
 **If in doubt: it's a code change. Run the review.**
 
-## The Loop
-
-At each step, narrate what you are doing so the user can follow progress.
-
-```
-MAX_ROUNDS = <from Step 0>
-current_round = 0
-
-WHILE issues > 0 AND current_round < MAX_ROUNDS:
-
-  current_round += 1
-  Announce: "🔍 Adversarial review — round current_round/MAX_ROUNDS starting. Dispatching GPT-5.4 and Claude Opus 4.6..."
-
-  1. Dispatch BOTH reviewer sub-agents in parallel (background mode):
-     - Reviewer A: gpt-5.4 model
-     - Reviewer B: claude-opus-4.6 model
-     Each receives: the full diff + relevant file context
-
-  2. Announce: "⏳ Waiting for both reviewers..."
-     Read both results as they complete.
-
-  3. Announce findings as each reviewer returns, e.g.:
-     "GPT-5.4 found 3 issues: [brief list]"
-     "Claude Opus found 2 issues: [brief list]"
-
-  4. De-duplicate and announce:
-     "📋 De-duplicated: N unique issues to fix — [list]"
-
-  5. Fix ALL issues — no exceptions.
-     Announce each fix: "🔧 Fixing: [issue description]"
-
-  6. Announce: "✅ Round current_round complete. Starting round current_round+1..."
-
-IF current_round == MAX_ROUNDS AND issues > 0:
-  Announce: "⚠️ Max rounds (MAX_ROUNDS) reached. N issues remain: [list]. Manual user review required before proceeding."
-ELSE:
-  Announce: "✅ Adversarial review complete — both models returned clean."
-```
-
 ## Step 0: Determine Maximum Rounds
 
 **Before doing anything else**, ask the user how many review-fix-review iterations to allow at most.
 
 **Interactive mode** — use the `ask_user` tool with a single integer field:
 - Title: "Maximum adversarial review rounds"
-- Description: "The loop stops after this many rounds even if issues remain."
-- Type: integer, minimum 1, **default 3**
+- Description: "Set to 0 to loop until ALL issues are fixed (no cap). Set to any positive integer to limit to that many rounds."
+- Type: integer, minimum 0, **default 3**
 
 **Autopilot / non-interactive mode** (when `ask_user` is unavailable): set `MAX_ROUNDS = 3` automatically and announce it.
 
-Announce: `"🔢 Maximum rounds set to MAX_ROUNDS."`
+If `MAX_ROUNDS = 0`: Announce: `"🔢 Maximum rounds set to unlimited — will loop until all issues are resolved."`
+Otherwise: Announce: `"🔢 Maximum rounds set to MAX_ROUNDS."`
 
 ## Step 1: Get the Diff
 
@@ -102,6 +64,47 @@ git diff origin/$(git rev-parse --abbrev-ref HEAD)..HEAD
 ```
 
 Pass the full diff text to both review sub-agents. If the diff is large, also include the relevant file contents for context.
+
+## The Loop
+
+At each step, narrate what you are doing so the user can follow progress.
+
+```
+MAX_ROUNDS = <from Step 0>   # 0 = unlimited
+current_round = 0
+UNLIMITED = (MAX_ROUNDS == 0)
+
+WHILE issues > 0 AND (UNLIMITED OR current_round < MAX_ROUNDS):
+
+  current_round += 1
+  round_label = current_round if UNLIMITED else f"{current_round}/{MAX_ROUNDS}"
+  Announce: "🔍 Adversarial review — round round_label starting. Dispatching GPT-5.4 and Claude Opus 4.6..."
+
+  1. Dispatch BOTH reviewer sub-agents in parallel (background mode):
+     - Reviewer A: gpt-5.4 model
+     - Reviewer B: claude-opus-4.6 model
+     Each receives: the full diff + relevant file context
+
+  2. Announce: "⏳ Waiting for both reviewers..."
+     Read both results as they complete.
+
+  3. Announce findings as each reviewer returns, e.g.:
+     "GPT-5.4 found 3 issues: [brief list]"
+     "Claude Opus found 2 issues: [brief list]"
+
+  4. De-duplicate and announce:
+     "📋 De-duplicated: N unique issues to fix — [list]"
+
+  5. Fix ALL issues — no exceptions.
+     Announce each fix: "🔧 Fixing: [issue description]"
+
+  6. Announce: "✅ Round current_round complete. Starting next round..."
+
+IF NOT UNLIMITED AND current_round == MAX_ROUNDS AND issues > 0:
+  Announce: "⚠️ Max rounds (MAX_ROUNDS) reached. N issues remain: [list]. Manual user review required before proceeding."
+ELSE:
+  Announce: "✅ Adversarial review complete — both models returned clean."
+```
 
 ## Dispatching Reviewer Sub-Agents
 
@@ -135,9 +138,11 @@ Round N:  Agent A = 1 issue,  Agent B = 0 issues  →  Fix and continue 🔄
 Round N:  Agent A = 0 issues, Agent B = 1 issue   →  Fix and continue 🔄
 ```
 
-**Max rounds reached:** `current_round == MAX_ROUNDS` and issues still remain.
+**Max rounds reached (capped mode only):** `MAX_ROUNDS > 0` and `current_round == MAX_ROUNDS` and issues still remain.
 → Report every remaining issue clearly and require manual user review before proceeding.
 → Do NOT silently drop issues. Do NOT resume the loop without re-invoking the skill.
+
+**Unlimited mode (`MAX_ROUNDS = 0`):** there is NO cap — the loop MUST continue until both reviewers return zero issues. The only exit is a clean pass.
 
 **"Minor" is not a stopping condition.** Style, naming, and preference findings must be fixed before declaring done. If both agents agree an issue is truly trivial AND you fix it, it will disappear from the next round — that is when you stop.
 
@@ -145,7 +150,7 @@ Round N:  Agent A = 0 issues, Agent B = 1 issue   →  Fix and continue 🔄
 
 ```
 DO NOT STOP THE LOOP WHILE ANY AGENT REPORTS ANY ISSUE
-— unless the user-set MAX_ROUNDS cap has been reached.
+— unless the user-set MAX_ROUNDS cap has been reached (and MAX_ROUNDS > 0).
 ```
 
 **No exceptions:**
