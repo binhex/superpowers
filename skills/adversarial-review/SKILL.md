@@ -7,11 +7,11 @@ description: You MUST use after ANY code change — The only exemptions are test
 
 ## Overview
 
-After ANY code change (excluding exemptions), YOU MUST (the main agent) RUN a dual-model adversarial review loop directly in the current session. Do NOT delegate this skill to a sub-agent — the orchestration MUST happen in your session so the user can see live progress.
+After ANY code change (excluding exemptions), the main agent MUST run a dual-model adversarial review loop before proceeding to any further steps (e.g. pushing the change, creating a PR or merging the branch). The dual-model adversarial review should happen as sub-agents, the main agent is responsible for orchestrating the loop, narrating progress, and applying fixes — the main agent should NEVER delegate the orchestration of itself to a sub-agent.
 
-Two independent reviewer sub-agents (GPT-5.4 and Claude Opus 4.6) are dispatched in parallel for each round. You gather their findings, de-duplicate, fix every issue reported, narrate progress throughout, then repeat — until **both reviewers return zero issues in the same round OR the max number of loops is reached**.
+Two independent reviewer sub-agents (GPT-5.4 and Claude Opus 4.7) are dispatched in parallel for each round. You gather their findings, de-duplicate, fix every issue reported, narrate progress throughout, then repeat — until **both reviewers return zero issues in the same round OR the max number of loops is reached**.
 
-**Core principle:** Determine max rounds → Get Diff → Run loop with sub agents → Continue until all issues fixed or max loop value reached.
+**Core principle:** Determine max rounds → Get Diff → Run loop with sub agents → Continue until all issues reported by the sub-agents are fixed, or max loop value reached.
 
 ## What Counts as a Code Change?
 
@@ -78,11 +78,11 @@ WHILE issues > 0 AND (UNLIMITED OR current_round < MAX_ROUNDS):
 
   current_round += 1
   round_label = current_round if UNLIMITED else f"{current_round}/{MAX_ROUNDS}"
-  Announce: "🔍 Adversarial review — round round_label starting. Dispatching GPT-5.4 and Claude Opus 4.6..."
+  Announce: "🔍 Adversarial review — round round_label starting. Dispatching GPT-5.4 and Claude Opus 4.7..."
 
   1. Dispatch BOTH reviewer sub-agents in parallel (background mode):
      - Reviewer A: gpt-5.4 model
-     - Reviewer B: claude-opus-4.6 model
+     - Reviewer B: claude-opus-4.7 model
      Each receives: the full diff + relevant file context
 
   2. Announce: "⏳ Waiting for both reviewers..."
@@ -121,7 +121,7 @@ Reviewer A prompt:
   model: gpt-5.4
 
 Reviewer B prompt: (identical prompt)
-  model: claude-opus-4.6
+  model: claude-opus-4.7
 ```
 
 Wait for both to complete (`read_agent`), then immediately report their findings to the user before proceeding to de-duplicate.

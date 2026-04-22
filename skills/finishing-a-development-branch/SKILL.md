@@ -15,9 +15,12 @@ Guide completion of development work by presenting clear options and handling ch
 
 ## The Process
 
-### Step 0: Adversarial Review (MANDATORY)
+### Step 1: Adversarial Review (MANDATORY — ZERO EXCEPTIONS)
 
-**Before anything else**, invoke `superpowers:adversarial-review` if code changes were made.
+**STOP. Do not think. Do not reason. Do not check for exemptions.**
+Invoke `superpowers:adversarial-review` RIGHT NOW. The adversarial-review skill will determine if an exemption applies — that decision is not yours to make here.
+
+**This means you invoke adversarial-review unconditionally, every single time, no matter what.**
 
 **Do NOT skip this because:**
 - Other reviews (spec compliance, code quality, rubber duck) were already done — they do NOT replace adversarial review
@@ -28,12 +31,9 @@ Guide completion of development work by presenting clear options and handling ch
 > "Other reviews cover it, I do not need to run Adversarial Review"
 > "I've used Rubber Duck, I don't need to perform an Adversarial Review"
 
-**Exemptions (skip Step 0 only if ALL changes are):**
-- Test-only, documentation-only, comment-only, or single-line changes
+**If you are tempted to skip Step 1 for any reason: that is the red flag. Invoke the skill.**
 
-If exemption applies, state it explicitly: `"Skipping adversarial review — changes are [reason]."` then continue to Step 1.
-
-### Step 1: Verify Tests
+### Step 2: Verify Tests
 
 **Before presenting options, verify tests pass:**
 
@@ -55,7 +55,7 @@ Stop. Don't proceed to Step 2.
 
 **If tests pass:** Continue to Step 2.
 
-### Step 2: Determine Base Branch
+### Step 3: Determine Base Branch
 
 ```bash
 # Try common base branches
@@ -64,7 +64,7 @@ git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
 
 Or ask: "This branch split from main - is that correct?"
 
-### Step 3: Present Options
+### Step 4: Present Options
 
 Present exactly these 4 options:
 
@@ -81,7 +81,7 @@ Which option?
 
 **Don't add explanation** - keep options concise.
 
-### Step 4: Execute Choice
+### Step 5: Execute Choice
 
 #### Option 1: Merge Locally
 
@@ -102,7 +102,7 @@ git merge <feature-branch>
 git branch -d <feature-branch>
 ```
 
-Then: Cleanup worktree (Step 5)
+Then: Cleanup worktree (Step 6)
 
 #### Option 2: Push and Create PR
 
@@ -121,7 +121,7 @@ EOF
 )"
 ```
 
-Then: Cleanup worktree (Step 5)
+Then: Cleanup worktree (Step 6)
 
 #### Option 3: Keep As-Is
 
@@ -149,9 +149,9 @@ git checkout <base-branch>
 git branch -D <feature-branch>
 ```
 
-Then: Cleanup worktree (Step 5)
+Then: Cleanup worktree (Step 6)
 
-### Step 5: Cleanup Worktree
+### Step 6: Cleanup Worktree
 
 **For Options 1, 2, 4:**
 
@@ -197,12 +197,14 @@ git worktree remove <worktree-path>
 ## Red Flags
 
 **Never:**
+- Skipping or reasoning about skipping adversarial review — invoke it, always, unconditionally
 - Proceed with failing tests
 - Merge without verifying tests on result
 - Delete work without confirmation
 - Force-push without explicit request
 
 **Always:**
+- Run adversarial review
 - Verify tests before offering options
 - Present exactly 4 options
 - Get typed confirmation for Option 4
