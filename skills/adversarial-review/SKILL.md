@@ -73,6 +73,7 @@ At each step, narrate what you are doing so the user can follow progress.
 MAX_ROUNDS = <from Step 0>   # 0 = unlimited
 current_round = 0
 UNLIMITED = (MAX_ROUNDS == 0)
+issues = 1                   # initialise > 0 to force at least one round
 
 WHILE issues > 0 AND (UNLIMITED OR current_round < MAX_ROUNDS):
 
@@ -92,13 +93,17 @@ WHILE issues > 0 AND (UNLIMITED OR current_round < MAX_ROUNDS):
      "GPT-5.4 found 3 issues: [brief list]"
      "Claude Opus found 2 issues: [brief list]"
 
-  4. De-duplicate and announce:
-     "📋 De-duplicated: N unique issues to fix — [list]"
+  4. De-duplicate. Set issues = count of unique issues found this round.
+     Announce: "📋 De-duplicated: N unique issues to fix — [list]"
+     ⚠️ issues is set here by the reviewer output — applying fixes in step 5
+     does NOT reset issues to 0. Only the NEXT round's reviewers can do that.
 
-  5. Fix ALL issues — no exceptions.
-     Announce each fix: "🔧 Fixing: [issue description]"
-
-  6. Announce: "✅ Round current_round complete. Starting next round..."
+  5. IF issues > 0:
+       Fix ALL issues — no exceptions.
+       Announce each fix: "🔧 Fixing: [issue description]"
+       Announce: "✅ Round current_round complete — fixes applied, re-running reviewers..."
+     ELSE:
+       # issues == 0: both reviewers returned clean this round — loop will exit
 
 IF NOT UNLIMITED AND current_round == MAX_ROUNDS AND issues > 0:
   Announce: "⚠️ Max rounds (MAX_ROUNDS) reached. N issues remain: [list]. Manual user review required before proceeding."
