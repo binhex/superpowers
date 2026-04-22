@@ -93,6 +93,7 @@ These thoughts mean STOP—you're rationalizing:
 | "I'll just do this one thing first" | Check BEFORE doing anything. |
 | "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
 | "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+| "It's already in `<invoked_skills>` context" | That block is history from a previous turn. Invoke fresh on EVERY new user message — no exceptions. |
 
 ## Skill Priority
 

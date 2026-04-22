@@ -126,9 +126,11 @@ Fix any issues inline. No need to re-review — just fix and move on.
 **User Review Gate:**
 After the spec review loop passes, ask the user to review the written spec before proceeding:
 
-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+> "Spec written and committed to `<path>`. Please either **accept** the spec to continue to the implementation plan, or describe any **alterations** you'd like me to make."
 
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+Wait for the user's response:
+- If they **accept**, invoke the writing-plans skill.
+- If they describe **alterations**, apply them to the spec, re-run the spec self-review, then present the updated spec with the same prompt above. Only proceed once the user accepts.
 
 **Implementation:**
 
