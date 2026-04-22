@@ -15,7 +15,7 @@ Guide completion of development work by presenting clear options and handling ch
 
 ## The Process
 
-### Step 1: Adversarial Review (MANDATORY — ZERO EXCEPTIONS)
+### Step 1: Adversarial Review (**MANDATORY — ZERO EXCEPTIONS**)
 
 **STOP. Do not think. Do not reason. Do not check for exemptions.**
 Invoke `adversarial-review` skill RIGHT NOW. The adversarial-review skill will determine if an exemption applies — that decision is not yours to make here.
