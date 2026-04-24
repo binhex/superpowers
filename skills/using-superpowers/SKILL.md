@@ -58,7 +58,7 @@ digraph skill_flow {
     "Create TodoWrite todo per item" [shape=box];
     "Follow skill exactly" [shape=box];
     "About to commit/respond with code changes?" [shape=doublecircle];
-    "Invoke binhex:adversarial-review skill" [shape=box];
+    "Invoke adversarial-review skill" [shape=box];
     "Respond (including clarifications)" [shape=doublecircle];
 
     "About to EnterPlanMode?" -> "Already brainstormed?";
@@ -75,9 +75,9 @@ digraph skill_flow {
     "Has checklist?" -> "Follow skill exactly" [label="no"];
     "Create TodoWrite todo per item" -> "Follow skill exactly" [label="yes"];
     "Follow skill exactly" -> "About to commit/respond with code changes?";
-    "About to commit/respond with code changes?" -> "Invoke binhex:adversarial-review skill" [label="yes"];
+    "About to commit/respond with code changes?" -> "Invoke adversarial-review skill" [label="yes"];
     "About to commit/respond with code changes?" -> "Respond (including clarifications)" [label="no"];
-    "Invoke binhex:adversarial-review skill" -> "Respond (including clarifications)";
+    "Invoke adversarial-review skill" -> "Respond (including clarifications)";
 }
 ```
 
