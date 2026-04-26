@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
+description: Use when writing, creating, or modifying any implementation code — features, bug fixes, refactoring, new functions, classes, modules, or any source code change. Required before touching any source file.
 ---
 
 # Test-Driven Development (TDD)
@@ -15,11 +15,16 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 ## When to Use
 
-**Always:**
-- New features
-- Bug fixes
-- Refactoring
-- Behavior changes
+**Always — before writing a single line of source code:**
+- Adding new features or functionality
+- Fixing any bug (small or large)
+- Refactoring existing code
+- Writing new functions, methods, classes, or modules
+- Making behavior or logic changes
+- Adding new files to the codebase
+- Modifying existing source files
+
+**Trigger words:** "implement", "add", "fix", "create", "write", "build", "modify", "change", "refactor", "update code"
 
 **Exceptions (ask your human partner):**
 - Throwaway prototypes
