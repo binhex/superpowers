@@ -4,6 +4,8 @@ Use this template when dispatching a spec compliance reviewer subagent.
 
 **Purpose:** Verify implementer built what was requested (nothing more, nothing less)
 
+## Copilot / opencode harness
+
 ```
 Task tool (general-purpose):
   description: "Review spec compliance for Task N"
@@ -58,4 +60,18 @@ Task tool (general-purpose):
     Report:
     - ✅ Spec compliant (if everything matches after code inspection)
     - ❌ Issues found: [list specifically what's missing or extra, with file:line references]
+```
+
+## Pi harness
+
+```typescript
+subagent({
+  agent: "reviewer",
+  task: `Review spec compliance for Task N: [task name]
+
+[paste the full prompt text from the Copilot section above, starting from
+"You are reviewing whether an implementation matches its specification"
+through to the end of the Report block]`,
+  context: "fresh"
+})
 ```

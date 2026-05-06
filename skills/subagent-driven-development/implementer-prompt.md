@@ -2,6 +2,8 @@
 
 Use this template when dispatching an implementer subagent.
 
+## Copilot / opencode harness
+
 ```
 Task tool (general-purpose):
   description: "Implement Task N: [task name]"
@@ -110,4 +112,17 @@ Task tool (general-purpose):
     Use DONE_WITH_CONCERNS if you completed the work but have doubts about correctness.
     Use BLOCKED if you cannot complete the task. Use NEEDS_CONTEXT if you need
     information that wasn't provided. Never silently produce work you're unsure about.
+```
+
+## Pi harness
+
+```typescript
+subagent({
+  agent: "worker",
+  task: `Implement Task N: [task name]
+
+[paste the full prompt text from the Copilot section above, starting from
+"You are implementing Task N" through to the end of the Report Format block]`,
+  context: "fresh"
+})
 ```

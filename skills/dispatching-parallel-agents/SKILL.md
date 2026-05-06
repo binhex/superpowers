@@ -69,14 +69,33 @@ Each agent gets:
 // Dispatch subagents in parallel (harness-specific):
 // Claude Code: Task("Fix agent-tool-abort.test.ts failures")
 // Copilot:     spawn agent with task
-// pi:          Use tmux or build an extension
+// pi:          subagent({ tasks: [{ agent: "delegate", task: "..." }, ...] })
 // Other:       Check platform documentation
 
+// Copilot / opencode example:
 Agent("Fix agent-tool-abort.test.ts failures")
 Agent("Fix batch-completion-behavior.test.ts failures")
 Agent("Fix tool-approval-race-conditions.test.ts failures")
 // All three run concurrently
 ```
+
+**Pi harness — use the `subagent` tool:**
+
+```typescript
+subagent({
+  tasks: [
+    { agent: "delegate", task: "Fix agent-tool-abort.test.ts failures..." },
+    { agent: "delegate", task: "Fix batch-completion-behavior.test.ts failures..." },
+    { agent: "delegate", task: "Fix tool-approval-race-conditions.test.ts failures..." }
+  ],
+  context: "fresh"
+})
+```
+
+For implementation tasks that need the full codebase, prefer `agent: "worker"` over
+`agent: "delegate"`. For review-only or investigation tasks, `agent: "reviewer"` or
+`agent: "delegate"` is sufficient. Check available agents with
+`subagent({ action: "list" })` if unsure.
 
 ### 4. Review and Integrate
 

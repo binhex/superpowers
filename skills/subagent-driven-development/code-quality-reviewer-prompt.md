@@ -6,6 +6,8 @@ Use this template when dispatching a code quality reviewer subagent.
 
 **Only dispatch after spec compliance review passes.**
 
+## Copilot / opencode harness
+
 ```
 Task tool (superpowers:code-reviewer):
   Use template at requesting-code-review/code-reviewer.md
@@ -15,6 +17,31 @@ Task tool (superpowers:code-reviewer):
   BASE_SHA: [commit before task]
   HEAD_SHA: [current commit]
   DESCRIPTION: [task summary]
+```
+
+## Pi harness
+
+```typescript
+subagent({
+  agent: "reviewer",
+  task: `Review code quality for Task N: [task name]
+
+What was implemented: [from implementer's report]
+Plan/requirements: Task N from [plan-file]
+Base SHA: [commit before task]
+Head SHA: [current commit]
+
+Review the diff (git diff BASE_SHA..HEAD_SHA) and the changed files for:
+- Code cleanliness and maintainability
+- Test coverage and quality
+- File structure and separation of concerns
+- Naming clarity and accuracy
+- YAGNI / over-engineering
+- Established codebase patterns
+
+Return: Strengths, Issues (Critical/Important/Minor), Assessment (approved or not).`,
+  context: "fresh"
+})
 ```
 
 **In addition to standard code quality concerns, the reviewer should check:**

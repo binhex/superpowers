@@ -37,6 +37,23 @@ digraph when_to_use {
 - Two-stage review after each task: spec compliance first, then code quality
 - Faster iteration (no human-in-loop between tasks)
 
+## Step 0: Detect Harness
+
+Before dispatching any subagents, determine which harness is running.
+
+Use `ask_user_question` (pi) or `ask_user` (copilot/opencode):
+- question: `"Which harness are you using?"`
+- options: `["pi", "copilot", "opencode"]`
+
+Set `HARNESS` to the response. Announce: `"🖥️ Harness set to HARNESS."`
+
+**Autopilot / non-interactive mode** (when neither tool is available): if the `subagent`
+tool is available, set `HARNESS = "pi"`; otherwise set `HARNESS = "copilot"`. Announce
+the auto-detected harness.
+
+This value controls how every subagent is dispatched throughout the entire workflow.
+See the prompt templates below for harness-specific dispatch instructions.
+
 ## The Process
 
 ```dot
@@ -122,6 +139,9 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 - `./implementer-prompt.md` - Dispatch implementer subagent
 - `./spec-reviewer-prompt.md` - Dispatch spec compliance reviewer subagent
 - `./code-quality-reviewer-prompt.md` - Dispatch code quality reviewer subagent
+
+Each template contains harness-specific dispatch instructions. Use the section that
+matches your `HARNESS` value from Step 0.
 
 ## Example Workflow
 
