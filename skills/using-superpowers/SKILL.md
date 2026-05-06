@@ -27,17 +27,28 @@ If CLAUDE.md, GEMINI.md, or AGENTS.md says "don't use TDD" and a skill says "alw
 
 ## How to Access Skills
 
-**In Claude Code:** Use the `Skill` tool. When you invoke a skill, its content is loaded and presented to you—follow it directly. Never use the Read tool on skill files.
+Skills follow the [Agent Skills standard](https://agentskills.io). Access depends on your harness:
 
-**In Copilot CLI:** Use the `skill` tool. Skills are auto-discovered from installed plugins. The `skill` tool works the same as Claude Code's `Skill` tool.
+| Harness | How to Invoke |
+|---------|---------------|
+| Claude Code | `Skill` tool |
+| Copilot CLI | `skill` tool |
+| Gemini CLI | `activate_skill` tool |
+| pi | `/skill:name` command or auto-loaded |
+| Other | Check platform documentation |
 
-**In Gemini CLI:** Skills activate via the `activate_skill` tool. Gemini loads skill metadata at session start and activates the full content on demand.
-
-**In other environments:** Check your platform's documentation for how skills are loaded.
+When you invoke a skill, its content is loaded and presented to you—follow it directly. Never use the Read tool on skill files.
 
 ## Platform Adaptation
 
-Skills use Claude Code tool names. Non-CC platforms: see `references/copilot-tools.md` (Copilot CLI), `references/codex-tools.md` (Codex) for tool equivalents. Gemini CLI users get the tool mapping loaded automatically via GEMINI.md.
+Skills use Claude Code tool names as the default. Other platforms may have different tool names:
+
+- **Copilot CLI:** See `references/copilot-tools.md`
+- **Codex:** See `references/codex-tools.md`
+- **pi:** Uses same tool names as Claude Code (`read`, `write`, `edit`, `bash`)
+- **Gemini CLI:** Tool mapping loaded automatically via GEMINI.md
+
+Check your platform's documentation for any differences.
 
 # Using Skills
 
@@ -55,7 +66,7 @@ digraph skill_flow {
     "Invoke Skill tool" [shape=box];
     "Announce: 'Using [skill] to [purpose]'" [shape=box];
     "Has checklist?" [shape=diamond];
-    "Create TodoWrite todo per item" [shape=box];
+    "Create todo per item (TodoWrite/Task tool)" [shape=box];
     "Follow skill exactly" [shape=box];
     "About to commit/respond with code changes?" [shape=doublecircle];
     "Invoke adversarial-review skill" [shape=box];
@@ -71,9 +82,9 @@ digraph skill_flow {
     "Might any skill apply?" -> "Respond (including clarifications)" [label="definitely not"];
     "Invoke Skill tool" -> "Announce: 'Using [skill] to [purpose]'";
     "Announce: 'Using [skill] to [purpose]'" -> "Has checklist?";
-    "Has checklist?" -> "Create TodoWrite todo per item" [label="yes"];
+    "Has checklist?" -> "Create todo per item (TodoWrite/Task tool)" [label="yes"];
     "Has checklist?" -> "Follow skill exactly" [label="no"];
-    "Create TodoWrite todo per item" -> "Follow skill exactly" [label="yes"];
+    "Create todo per item (TodoWrite/Task tool)" -> "Follow skill exactly" [label="yes"];
     "Follow skill exactly" -> "About to commit/respond with code changes?";
     "About to commit/respond with code changes?" -> "Invoke adversarial-review skill" [label="yes"];
     "About to commit/respond with code changes?" -> "Respond (including clarifications)" [label="no"];

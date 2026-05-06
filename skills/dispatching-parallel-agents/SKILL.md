@@ -66,10 +66,15 @@ Each agent gets:
 ### 3. Dispatch in Parallel
 
 ```typescript
-// In Claude Code / AI environment
-Task("Fix agent-tool-abort.test.ts failures")
-Task("Fix batch-completion-behavior.test.ts failures")
-Task("Fix tool-approval-race-conditions.test.ts failures")
+// Dispatch subagents in parallel (harness-specific):
+// Claude Code: Task("Fix agent-tool-abort.test.ts failures")
+// Copilot:     spawn agent with task
+// pi:          Use tmux or build an extension
+// Other:       Check platform documentation
+
+Agent("Fix agent-tool-abort.test.ts failures")
+Agent("Fix batch-completion-behavior.test.ts failures")
+Agent("Fix tool-approval-race-conditions.test.ts failures")
 // All three run concurrently
 ```
 
