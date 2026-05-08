@@ -37,18 +37,9 @@ digraph when_to_use {
 - Two-stage review after each task: spec compliance first, then code quality
 - Faster iteration (no human-in-loop between tasks)
 
-## Step 0: Detect Harness
+## Step 0: Harness
 
-Before dispatching any subagents, determine which harness is running.
-
-
-**Copilot / opencode harness** — use `ask_user`:
-- question: `"Which harness are you using?"`
-- options: ["copilot", "opencode", "omp"]
-
-Set `HARNESS` to the response. Announce: `"🖥️ Harness set to HARNESS."`
-
-**Autopilot / non-interactive mode** (when neither tool is available): if the `task` tool is available, set `HARNESS = "omp"`; otherwise set `HARNESS = "copilot"`. Announce the auto-detected harness.
+HARNESS = "omp" — injected by the OMP extension. No detection needed.
 
 This value controls how every subagent is dispatched throughout the entire workflow.
 See the prompt templates below for harness-specific dispatch instructions.

@@ -68,7 +68,7 @@ digraph skill_flow {
     "Has checklist?" [shape=diamond];
     "Create todo per item (TodoWrite/Task tool)" [shape=box];
     "Follow skill exactly" [shape=box];
-    "About to commit/respond with code changes?" [shape=doublecircle];
+    "About to commit or create PR?" [shape=doublecircle];
     "Invoke adversarial-review skill" [shape=box];
     "Respond (including clarifications)" [shape=doublecircle];
 
@@ -85,9 +85,9 @@ digraph skill_flow {
     "Has checklist?" -> "Create todo per item (TodoWrite/Task tool)" [label="yes"];
     "Has checklist?" -> "Follow skill exactly" [label="no"];
     "Create todo per item (TodoWrite/Task tool)" -> "Follow skill exactly" [label="yes"];
-    "Follow skill exactly" -> "About to commit/respond with code changes?";
-    "About to commit/respond with code changes?" -> "Invoke adversarial-review skill" [label="yes"];
-    "About to commit/respond with code changes?" -> "Respond (including clarifications)" [label="no"];
+    "Follow skill exactly" -> "About to commit or create PR?";
+    "About to commit or create PR?" -> "Invoke adversarial-review skill" [label="yes"];
+    "About to commit or create PR?" -> "Respond (including clarifications)" [label="no"];
     "Invoke adversarial-review skill" -> "Respond (including clarifications)";
 }
 ```
@@ -121,7 +121,7 @@ When multiple skills could apply, use this order:
 
 "Let's build X" → brainstorming first, then implementation skills.
 "Fix this bug" → debugging first, then domain-specific skills.
-"After making code changes" → adversarial-review before requesting-code-review.
+"After making code changes" → adversarial-review before committing or creating a PR.
 
 ## Skill Types
 
