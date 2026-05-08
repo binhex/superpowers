@@ -34,7 +34,7 @@ Skills follow the [Agent Skills standard](https://agentskills.io). Access depend
 | Claude Code | `Skill` tool |
 | Copilot CLI | `skill` tool |
 | Gemini CLI | `activate_skill` tool |
-| pi | `/skill:name` command or auto-loaded |
+| OMP | Skill is auto-loaded |
 | Other | Check platform documentation |
 
 When you invoke a skill, its content is loaded and presented to you—follow it directly. Never use the Read tool on skill files.
@@ -45,7 +45,7 @@ Skills use Claude Code tool names as the default. Other platforms may have diffe
 
 - **Copilot CLI:** See `references/copilot-tools.md`
 - **Codex:** See `references/codex-tools.md`
-- **pi:** Uses same tool names as Claude Code (`read`, `write`, `edit`, `bash`)
+- **OMP:** Uses `task` tool for subagent dispatch; `ask` tool for user prompts
 - **Gemini CLI:** Tool mapping loaded automatically via GEMINI.md
 
 Check your platform's documentation for any differences.

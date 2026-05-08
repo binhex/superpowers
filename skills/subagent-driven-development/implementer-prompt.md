@@ -114,15 +114,19 @@ Task tool (general-purpose):
     information that wasn't provided. Never silently produce work you're unsure about.
 ```
 
-## Pi harness
+## OMP harness
 
 ```typescript
-subagent({
-  agent: "worker",
-  task: `Implement Task N: [task name]
+task({
+  agent: "task",
+  tasks: [{
+    id: "ImplementTaskN",
+    description: "Implement Task N: [task name]",
+    assignment: `Implement Task N: [task name]
 
 [paste the full prompt text from the Copilot section above, starting from
-"You are implementing Task N" through to the end of the Report Format block]`,
+"You are implementing Task N" through to the end of the Report Format block]`
+  }],
   context: "fresh"
 })
 ```

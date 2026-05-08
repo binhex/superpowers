@@ -41,15 +41,14 @@ digraph when_to_use {
 
 Before dispatching any subagents, determine which harness is running.
 
-Use `ask_user_question` (pi) or `ask_user` (copilot/opencode):
+
+**Copilot / opencode harness** — use `ask_user`:
 - question: `"Which harness are you using?"`
-- options: `["pi", "copilot", "opencode"]`
+- options: ["copilot", "opencode", "omp"]
 
 Set `HARNESS` to the response. Announce: `"🖥️ Harness set to HARNESS."`
 
-**Autopilot / non-interactive mode** (when neither tool is available): if the `subagent`
-tool is available, set `HARNESS = "pi"`; otherwise set `HARNESS = "copilot"`. Announce
-the auto-detected harness.
+**Autopilot / non-interactive mode** (when neither tool is available): if the `task` tool is available, set `HARNESS = "omp"`; otherwise set `HARNESS = "copilot"`. Announce the auto-detected harness.
 
 This value controls how every subagent is dispatched throughout the entire workflow.
 See the prompt templates below for harness-specific dispatch instructions.

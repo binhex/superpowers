@@ -19,12 +19,24 @@ Task tool (superpowers:code-reviewer):
   DESCRIPTION: [task summary]
 ```
 
-## Pi harness
+
+**In addition to standard code quality concerns, the reviewer should check:**
+- Does each file have one clear responsibility with a well-defined interface?
+- Are units decomposed so they can be understood and tested independently?
+- Is the implementation following the file structure from the plan?
+- Did this implementation create new files that are already large, or significantly grow existing files? (Don't flag pre-existing file sizes — focus on what this change contributed.)
+
+**Code reviewer returns:** Strengths, Issues (Critical/Important/Minor), Assessment
+
+## OMP harness
 
 ```typescript
-subagent({
+task({
   agent: "reviewer",
-  task: `Review code quality for Task N: [task name]
+  tasks: [{
+    id: "ReviewCodeQuality",
+    description: "Review code quality for Task N",
+    assignment: `Review code quality for Task N: [task name]
 
 What was implemented: [from implementer's report]
 Plan/requirements: Task N from [plan-file]
@@ -39,15 +51,8 @@ Review the diff (git diff BASE_SHA..HEAD_SHA) and the changed files for:
 - YAGNI / over-engineering
 - Established codebase patterns
 
-Return: Strengths, Issues (Critical/Important/Minor), Assessment (approved or not).`,
+Return: Strengths, Issues (Critical/Important/Minor), Assessment (approved or not).`
+  }],
   context: "fresh"
 })
 ```
-
-**In addition to standard code quality concerns, the reviewer should check:**
-- Does each file have one clear responsibility with a well-defined interface?
-- Are units decomposed so they can be understood and tested independently?
-- Is the implementation following the file structure from the plan?
-- Did this implementation create new files that are already large, or significantly grow existing files? (Don't flag pre-existing file sizes — focus on what this change contributed.)
-
-**Code reviewer returns:** Strengths, Issues (Critical/Important/Minor), Assessment

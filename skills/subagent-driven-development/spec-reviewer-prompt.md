@@ -62,16 +62,20 @@ Task tool (general-purpose):
     - ❌ Issues found: [list specifically what's missing or extra, with file:line references]
 ```
 
-## Pi harness
+## OMP harness
 
 ```typescript
-subagent({
+task({
   agent: "reviewer",
-  task: `Review spec compliance for Task N: [task name]
+  tasks: [{
+    id: "ReviewSpecCompliance",
+    description: "Review spec compliance for Task N",
+    assignment: `Review spec compliance for Task N: [task name]
 
 [paste the full prompt text from the Copilot section above, starting from
 "You are reviewing whether an implementation matches its specification"
-through to the end of the Report block]`,
+through to the end of the Report block]`
+  }],
   context: "fresh"
 })
 ```

@@ -69,7 +69,7 @@ Each agent gets:
 // Dispatch subagents in parallel (harness-specific):
 // Claude Code: Task("Fix agent-tool-abort.test.ts failures")
 // Copilot:     spawn agent with task
-// pi:          subagent({ tasks: [{ agent: "delegate", task: "..." }, ...] })
+// OMP:         task({ agent: "task", tasks: [...] })
 // Other:       Check platform documentation
 
 // Copilot / opencode example:
@@ -79,14 +79,16 @@ Agent("Fix tool-approval-race-conditions.test.ts failures")
 // All three run concurrently
 ```
 
-**Pi harness — use the `subagent` tool:**
+
+**OMP harness — use the `task` tool:**
 
 ```typescript
-subagent({
+task({
+  agent: "task",
   tasks: [
-    { agent: "delegate", task: "Fix agent-tool-abort.test.ts failures..." },
-    { agent: "delegate", task: "Fix batch-completion-behavior.test.ts failures..." },
-    { agent: "delegate", task: "Fix tool-approval-race-conditions.test.ts failures..." }
+    { id: "FixAgentToolAbort", description: "Fix agent-tool-abort.test.ts failures", assignment: "Fix agent-tool-abort.test.ts failures..." },
+    { id: "FixBatchCompletion", description: "Fix batch-completion-behavior.test.ts failures", assignment: "Fix batch-completion-behavior.test.ts failures..." },
+    { id: "FixToolApproval", description: "Fix tool-approval-race-conditions.test.ts failures", assignment: "Fix tool-approval-race-conditions.test.ts failures..." }
   ],
   context: "fresh"
 })
