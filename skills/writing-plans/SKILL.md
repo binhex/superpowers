@@ -40,6 +40,7 @@ This structure informs the task decomposition. Each task should produce self-con
 - "Run it to make sure it fails" - step
 - "Implement the minimal code to make the test pass" - step
 - "Run the tests and make sure they pass" - step
+- "Run adversarial review (unless exempt)" - step
 - "Commit" - step
 
 ## Plan Document Header
@@ -95,7 +96,11 @@ def function(input):
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Adversarial review** *(REQUIRED before commit — skip only if ALL changes are test-only, doc-only, comment-only, single-line, or non-code)*
+
+  REQUIRED SUB-SKILL: Use superpowers:adversarial-review
+
+- [ ] **Step 6: Commit** *(only after adversarial review completes or exemption applies)*
 
 ```bash
 git add tests/path/test.py src/path/file.py

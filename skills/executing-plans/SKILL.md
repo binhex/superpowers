@@ -27,7 +27,12 @@ For each task:
 1. Mark as in_progress
 2. Follow each step exactly (plan has bite-sized steps)
 3. Run verifications as specified
-4. Mark as completed
+4. **Before executing any step that contains `git commit`, `git push`, or PR creation — STOP.**
+   Evaluate adversarial-review exemptions: are ALL pending changes test-only, doc-only, comment-only, single-line, or non-code?
+   - If yes → exempt, proceed with the commit/push step.
+   - If no → **REQUIRED SUB-SKILL: Use superpowers:adversarial-review** before running the command.
+   The plan step is not an exemption. You evaluate exemptions; you invoke review.
+5. Mark as completed
 
 ### Step 3: Complete Development
 

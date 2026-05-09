@@ -111,6 +111,8 @@ These thoughts mean STOP—you're rationalizing:
 | "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
 | "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
 | "It's already in `<invoked_skills>` context" | That block is history from a previous turn. Invoke fresh on EVERY new user message — no exceptions. |
+| "The plan says to commit now" | Plans contain commit commands as execution shorthand — not as adversarial-review bypasses. Pause, evaluate exemptions, invoke adversarial-review if required, then commit. |
+| "I'm just following the plan step" | Plan steps that say `git commit` or `git push` require the same adversarial-review check as any other commit. Mechanical plan execution is the exact failure mode the review gate exists to prevent. |
 
 ## Skill Priority
 
