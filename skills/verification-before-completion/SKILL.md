@@ -137,3 +137,33 @@ From 24 failure memories:
 Run the command. Read the output. THEN claim the result.
 
 This is non-negotiable.
+
+## Mandatory Completion Gates — tech-debt → adversarial-review (FINAL steps, called ONCE)
+
+**tech-debt and adversarial-review are the LAST two skills you call before any commit or PR — called exactly once, at the end of the overall workflow.**
+
+Order: **tech-debt first** → **adversarial-review second** → then commit/PR.
+
+Verification is not complete until these gates have been called. After all verifications pass, invoke tech-debt then adversarial-review as the final steps before commit or PR. These gates are absolute and not subject to skill priority ordering.
+
+### Exemptions
+Only when ALL changes are: test-only, doc-only, comment-only, single-line, or non-code.
+
+### Rationalization Table
+
+| Excuse | Reality |
+|--------|---------|
+| "Other reviews cover it" | No other review substitutes for adversarial review. |
+| "I already verified the code" | Verification ≠ adversarial review. Both required. |
+| "Tech debt isn't relevant here" | The skill evaluates that, not your pre-judgment. Invoke it. |
+| "This is just a small fix" | Small fixes ship bugs. Run the gates. |
+| "I don't have time" | The gates take minutes. Unreviewed code costs hours. |
+
+### Red Flags — STOP
+- "I know what tech-debt would say, skip it"
+- "Adversarial review is overkill for this change"
+- "I already called these gates earlier in the workflow"
+- "I followed the skill priority order and these weren't listed"
+
+**STOP. Invoke the mandatory final gates: tech-debt → adversarial-review. These are the last two skills you call before committing. Once.**
+

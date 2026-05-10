@@ -13,7 +13,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
-**Context:** This should be run in a dedicated worktree (created by brainstorming skill).
+**Context:** If working in an isolated worktree, it should have been created via the `superpowers:using-git-worktrees` skill at execution time.
 
 **Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
 - (User preferences for plan location override this default)
@@ -40,7 +40,6 @@ This structure informs the task decomposition. Each task should produce self-con
 - "Run it to make sure it fails" - step
 - "Implement the minimal code to make the test pass" - step
 - "Run the tests and make sure they pass" - step
-- "Run adversarial review (unless exempt)" - step
 - "Commit" - step
 
 ## Plan Document Header
@@ -96,11 +95,7 @@ def function(input):
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: PASS
 
-- [ ] **Step 5: Adversarial review** *(REQUIRED before commit — skip only if ALL changes are test-only, doc-only, comment-only, single-line, or non-code)*
-
-  REQUIRED SUB-SKILL: Use superpowers:adversarial-review
-
-- [ ] **Step 6: Commit** *(only after adversarial review completes or exemption applies)*
+- [ ] **Step 5: Commit**
 
 ```bash
 git add tests/path/test.py src/path/file.py

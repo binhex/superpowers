@@ -11,6 +11,8 @@ Execute plan by dispatching fresh subagent per task, with two-stage review after
 
 **Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
 
+**Continuous execution:** Do not pause to check in with your human partner between tasks. Execute all tasks from the plan without stopping. The only reasons to stop are: BLOCKED status you cannot resolve, ambiguity that genuinely prevents progress, or all tasks complete. "Should I continue?" prompts and progress summaries waste their time — they asked you to execute the plan, so execute it.
+
 ## When to Use
 
 ```dot
@@ -37,13 +39,6 @@ digraph when_to_use {
 - Two-stage review after each task: spec compliance first, then code quality
 - Faster iteration (no human-in-loop between tasks)
 
-## Step 0: Harness
-
-HARNESS = "omp" — injected by the OMP extension. No detection needed.
-
-This value controls how every subagent is dispatched throughout the entire workflow.
-See the prompt templates below for harness-specific dispatch instructions.
-
 ## The Process
 
 ```dot
@@ -62,15 +57,15 @@ digraph process {
         "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [shape=box];
         "Code quality reviewer subagent approves?" [shape=diamond];
         "Implementer subagent fixes quality issues" [shape=box];
-        "Mark task complete (TodoWrite/Task tool)" [shape=box];
+        "Mark task complete in TodoWrite" [shape=box];
     }
 
-    "Read plan, extract tasks, create todos (TodoWrite/Task tool)" [shape=box];
+    "Read plan, extract all tasks with full text, note context, create TodoWrite" [shape=box];
     "More tasks remain?" [shape=diamond];
     "Dispatch final code reviewer subagent for entire implementation" [shape=box];
     "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
-    "Read plan, extract tasks, create todos (TodoWrite/Task tool)" -> "Dispatch implementer subagent (./implementer-prompt.md)";
+    "Read plan, extract all tasks with full text, note context, create TodoWrite" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer subagent asks questions?";
     "Implementer subagent asks questions?" -> "Answer questions, provide context" [label="yes"];
     "Answer questions, provide context" -> "Dispatch implementer subagent (./implementer-prompt.md)";
@@ -83,8 +78,8 @@ digraph process {
     "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" -> "Code quality reviewer subagent approves?";
     "Code quality reviewer subagent approves?" -> "Implementer subagent fixes quality issues" [label="no"];
     "Implementer subagent fixes quality issues" -> "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [label="re-review"];
-    "Code quality reviewer subagent approves?" -> "Mark task complete (TodoWrite/Task tool)" [label="yes"];
-    "Mark task complete (TodoWrite/Task tool)" -> "More tasks remain?";
+    "Code quality reviewer subagent approves?" -> "Mark task complete in TodoWrite" [label="yes"];
+    "Mark task complete in TodoWrite" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
     "More tasks remain?" -> "Dispatch final code reviewer subagent for entire implementation" [label="no"];
     "Dispatch final code reviewer subagent for entire implementation" -> "Use superpowers:finishing-a-development-branch";
@@ -129,9 +124,6 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 - `./implementer-prompt.md` - Dispatch implementer subagent
 - `./spec-reviewer-prompt.md` - Dispatch spec compliance reviewer subagent
 - `./code-quality-reviewer-prompt.md` - Dispatch code quality reviewer subagent
-
-Each template contains harness-specific dispatch instructions. Use the section that
-matches your `HARNESS` value from Step 0.
 
 ## Example Workflow
 
@@ -275,7 +267,7 @@ Done!
 ## Integration
 
 **Required workflow skills:**
-- **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
+- **superpowers:using-git-worktrees** - Ensures isolated workspace (creates one or verifies existing)
 - **superpowers:writing-plans** - Creates the plan this skill executes
 - **superpowers:requesting-code-review** - Code review template for reviewer subagents
 - **superpowers:finishing-a-development-branch** - Complete development after all tasks
@@ -285,3 +277,33 @@ Done!
 
 **Alternative workflow:**
 - **superpowers:executing-plans** - Use for parallel session instead of same-session execution
+
+## Mandatory Completion Gates — tech-debt → adversarial-review (FINAL steps, called ONCE)
+
+**tech-debt and adversarial-review are the LAST two skills you call before any commit or PR — called exactly once, at the end of the overall workflow.**
+
+Order: **tech-debt first** → **adversarial-review second** → then commit/PR.
+
+These are NOT per-task or per-subagent invocations. Do NOT call them during the per-task loop or after individual tasks. Call them only when ALL tasks are complete and you are about to finish the branch or create a PR. These gates are absolute and not subject to skill priority ordering.
+
+### Exemptions
+Only when ALL changes are: test-only, doc-only, comment-only, single-line, or non-code.
+
+### Rationalization Table
+
+| Excuse | Reality |
+|--------|---------|
+| "Other reviews cover it" | No other review substitutes for adversarial review. |
+| "I already tested it" | Testing and adversarial review catch different things. Both required. |
+| "Tech debt isn't relevant here" | The skill evaluates that, not your pre-judgment. Invoke it. |
+| "This is just a small fix" | Small fixes ship bugs. Run the gates. |
+| "I don't have time" | The gates take minutes. Unreviewed code costs hours. |
+
+### Red Flags — STOP
+- "I know what tech-debt would say, skip it"
+- "Adversarial review is overkill for this change"
+- "I already called these gates earlier in the workflow"
+- "I followed the skill priority order and these weren't listed"
+
+**STOP. Invoke the mandatory final gates: tech-debt → adversarial-review. These are the last two skills you call before committing. Once.**
+

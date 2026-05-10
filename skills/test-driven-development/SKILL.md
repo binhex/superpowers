@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Use when writing, creating, or modifying any implementation code — features, bug fixes, refactoring, new functions, classes, modules, or any source code change. Required before touching any source file.
+description: Use when implementing any feature or bugfix, before writing implementation code
 ---
 
 # Test-Driven Development (TDD)
@@ -15,16 +15,11 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 ## When to Use
 
-**Always — before writing a single line of source code:**
-- Adding new features or functionality
-- Fixing any bug (small or large)
-- Refactoring existing code
-- Writing new functions, methods, classes, or modules
-- Making behavior or logic changes
-- Adding new files to the codebase
-- Modifying existing source files
-
-**Trigger words:** "implement", "add", "fix", "create", "write", "build", "modify", "change", "refactor", "update code"
+**Always:**
+- New features
+- Bug fixes
+- Refactoring
+- Behavior changes
 
 **Exceptions (ask your human partner):**
 - Throwaway prototypes
@@ -374,3 +369,33 @@ Otherwise → not TDD
 ```
 
 No exceptions without your human partner's permission.
+
+## Mandatory Completion Gates — tech-debt → adversarial-review (FINAL steps, called ONCE)
+
+**tech-debt and adversarial-review are the LAST two skills you call before any commit or PR — called exactly once, at the end of the overall workflow.**
+
+Order: **tech-debt first** → **adversarial-review second** → then commit/PR.
+
+These are NOT per-skill invocations. Do NOT call them at the start of TDD or mid-cycle. Call them only when all implementation is complete and you are about to commit. These gates are absolute and not subject to skill priority ordering.
+
+### Exemptions
+Only when ALL changes are: test-only, doc-only, comment-only, single-line, or non-code.
+
+### Rationalization Table
+
+| Excuse | Reality |
+|--------|---------|
+| "Other reviews cover it" | No other review substitutes for adversarial review. |
+| "I already tested it" | Testing and adversarial review catch different things. Both required. |
+| "Tech debt isn't relevant here" | The skill evaluates that, not your pre-judgment. Invoke it. |
+| "This is just a small fix" | Small fixes ship bugs. Run the gates. |
+| "I don't have time" | The gates take minutes. Unreviewed code costs hours. |
+
+### Red Flags — STOP
+- "I know what tech-debt would say, skip it"
+- "Adversarial review is overkill for this change"
+- "I already called these gates earlier in the workflow"
+- "I followed the skill priority order and these weren't listed"
+
+**STOP. Invoke the mandatory final gates: tech-debt → adversarial-review. These are the last two skills you call before committing. Once.**
+

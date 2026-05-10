@@ -66,38 +66,12 @@ Each agent gets:
 ### 3. Dispatch in Parallel
 
 ```typescript
-// Dispatch subagents in parallel (harness-specific):
-// Claude Code: Task("Fix agent-tool-abort.test.ts failures")
-// Copilot:     spawn agent with task
-// OMP:         task({ agent: "task", tasks: [...] })
-// Other:       Check platform documentation
-
-// Copilot / opencode example:
-Agent("Fix agent-tool-abort.test.ts failures")
-Agent("Fix batch-completion-behavior.test.ts failures")
-Agent("Fix tool-approval-race-conditions.test.ts failures")
+// In Claude Code / AI environment
+Task("Fix agent-tool-abort.test.ts failures")
+Task("Fix batch-completion-behavior.test.ts failures")
+Task("Fix tool-approval-race-conditions.test.ts failures")
 // All three run concurrently
 ```
-
-
-**OMP harness — use the `task` tool:**
-
-```typescript
-task({
-  agent: "task",
-  tasks: [
-    { id: "FixAgentToolAbort", description: "Fix agent-tool-abort.test.ts failures", assignment: "Fix agent-tool-abort.test.ts failures..." },
-    { id: "FixBatchCompletion", description: "Fix batch-completion-behavior.test.ts failures", assignment: "Fix batch-completion-behavior.test.ts failures..." },
-    { id: "FixToolApproval", description: "Fix tool-approval-race-conditions.test.ts failures", assignment: "Fix tool-approval-race-conditions.test.ts failures..." }
-  ],
-  context: "fresh"
-})
-```
-
-For implementation tasks that need the full codebase, prefer `agent: "worker"` over
-`agent: "delegate"`. For review-only or investigation tasks, `agent: "reviewer"` or
-`agent: "delegate"` is sufficient. Check available agents with
-`subagent({ action: "list" })` if unsure.
 
 ### 4. Review and Integrate
 
@@ -206,3 +180,33 @@ From debugging session (2025-10-03):
 - All investigations completed concurrently
 - All fixes integrated successfully
 - Zero conflicts between agent changes
+
+## Mandatory Completion Gates — tech-debt → adversarial-review (FINAL steps, called ONCE)
+
+**tech-debt and adversarial-review are the LAST two skills you call before any commit or PR — called exactly once, at the end of the overall workflow.**
+
+Order: **tech-debt first** → **adversarial-review second** → then commit/PR.
+
+Call these gates AFTER all parallel agents have completed and their changes have been integrated, and BEFORE committing. Do NOT call them per-agent or mid-integration. These gates are absolute and not subject to skill priority ordering.
+
+### Exemptions
+Only when ALL changes are: test-only, doc-only, comment-only, single-line, or non-code.
+
+### Rationalization Table
+
+| Excuse | Reality |
+|--------|---------|
+| "Other reviews cover it" | No other review substitutes for adversarial review. |
+| "I already reviewed each agent's output" | Per-agent review ≠ adversarial review of the integrated result. Both required. |
+| "Tech debt isn't relevant here" | The skill evaluates that, not your pre-judgment. Invoke it. |
+| "This is just a small fix" | Small fixes ship bugs. Run the gates. |
+| "I don't have time" | The gates take minutes. Unreviewed code costs hours. |
+
+### Red Flags — STOP
+- "I know what tech-debt would say, skip it"
+- "Adversarial review is overkill for this change"
+- "I already called these gates earlier in the workflow"
+- "I followed the skill priority order and these weren't listed"
+
+**STOP. Invoke the mandatory final gates: tech-debt → adversarial-review. These are the last two skills you call before committing. Once.**
+

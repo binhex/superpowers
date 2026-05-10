@@ -2,6 +2,10 @@
 
 Superpowers is a complete software development methodology for your coding agents, built on top of a set of composable skills and some initial instructions that make sure your agent uses them.
 
+## Quickstart
+
+Give your agent Superpowers: [Claude Code](#claude-code), [Codex CLI](#codex-cli), [Codex App](#codex-app), [Factory Droid](#factory-droid), [Gemini CLI](#gemini-cli), [OpenCode](#opencode), [Cursor](#cursor), [GitHub Copilot CLI](#github-copilot-cli).
+
 ## How it works
 
 It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
@@ -26,95 +30,126 @@ Thanks!
 
 ## Installation
 
-**Note:** Installation differs by platform. 
+Installation differs by harness. If you use more than one, install Superpowers separately for each one.
 
-### Claude Code Official Marketplace
+### Claude Code
 
 Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
 
-Install the plugin from Anthropic's official marketplace:
+#### Official Marketplace
 
-```bash
-/plugin install superpowers@claude-plugins-official
-```
+- Install the plugin from Anthropic's official marketplace:
 
-### Claude Code (Superpowers Marketplace)
+  ```bash
+  /plugin install superpowers@claude-plugins-official
+  ```
+
+#### Superpowers Marketplace
 
 The Superpowers marketplace provides Superpowers and some other related plugins for Claude Code.
 
-In Claude Code, register the marketplace first:
+- Register the marketplace:
 
-```bash
-/plugin marketplace add obra/superpowers-marketplace
-```
+  ```bash
+  /plugin marketplace add obra/superpowers-marketplace
+  ```
 
-Then install the plugin from this marketplace:
+- Install the plugin from this marketplace:
 
-```bash
-/plugin install superpowers@superpowers-marketplace
-```
+  ```bash
+  /plugin install superpowers@superpowers-marketplace
+  ```
 
-### OpenAI Codex CLI
+### Codex CLI
 
-- Open plugin search interface
+Superpowers is available via the [official Codex plugin marketplace](https://github.com/openai/plugins).
 
-```bash
-/plugins
-```
+- Open the plugin search interface:
 
-Search for Superpowers
+  ```bash
+  /plugins
+  ```
 
-```bash
-superpowers
-```
+- Search for Superpowers:
 
-Select `Install Plugin`
+  ```bash
+  superpowers
+  ```
 
-### OpenAI Codex App
+- Select `Install Plugin`.
+
+### Codex App
+
+Superpowers is available via the [official Codex plugin marketplace](https://github.com/openai/plugins).
 
 - In the Codex app, click on Plugins in the sidebar.
-- You should see `Superpowers` in the Coding section. 
+- You should see `Superpowers` in the Coding section.
 - Click the `+` next to Superpowers and follow the prompts.
 
+### Factory Droid
 
-### Cursor (via Plugin Marketplace)
+- Register the marketplace:
 
-In Cursor Agent chat, install from marketplace:
+  ```bash
+  droid plugin marketplace add https://github.com/obra/superpowers
+  ```
 
-```text
-/add-plugin superpowers
-```
+- Install the plugin:
 
-or search for "superpowers" in the plugin marketplace.
-
-### OpenCode
-
-Tell OpenCode:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
-```
-
-**Detailed docs:** [docs/README.opencode.md](docs/README.opencode.md)
-
-### GitHub Copilot CLI
-
-```bash
-copilot plugin marketplace add obra/superpowers-marketplace
-copilot plugin install superpowers@superpowers-marketplace
-```
+  ```bash
+  droid plugin install superpowers@superpowers
+  ```
 
 ### Gemini CLI
 
-```bash
-gemini extensions install https://github.com/obra/superpowers
-```
+- Install the extension:
 
-To update:
+  ```bash
+  gemini extensions install https://github.com/obra/superpowers
+  ```
 
-```bash
-gemini extensions update superpowers
-```
+- Update later:
+
+  ```bash
+  gemini extensions update superpowers
+  ```
+
+### OpenCode
+
+OpenCode uses its own plugin install; install Superpowers separately even if you
+already use it in another harness.
+
+- Tell OpenCode:
+
+  ```
+  Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
+  ```
+
+- Detailed docs: [docs/README.opencode.md](docs/README.opencode.md)
+
+### Cursor
+
+- In Cursor Agent chat, install from marketplace:
+
+  ```text
+  /add-plugin superpowers
+  ```
+
+- Or search for "superpowers" in the plugin marketplace.
+
+### GitHub Copilot CLI
+
+- Register the marketplace:
+
+  ```bash
+  copilot plugin marketplace add obra/superpowers-marketplace
+  ```
+
+- Install the plugin:
+
+  ```bash
+  copilot plugin install superpowers@superpowers-marketplace
+  ```
 
 ## The Basic Workflow
 
@@ -128,11 +163,9 @@ gemini extensions update superpowers
 
 5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
 
-6. **adversarial-review** - Activates after any major code change. Dispatches GPT-5.4 and Claude Opus 4.6 as independent reviewers in parallel, de-duplicates findings, fixes every issue, and repeats until both models return clean in the same round.
+6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
 
-7. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
-
-8. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
+7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
 
 **The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
 
@@ -147,16 +180,13 @@ gemini extensions update superpowers
 - **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
 - **verification-before-completion** - Ensure it's actually fixed
 
-**Code Review**
-- **adversarial-review** - Dual-model review loop: dispatches GPT-5.4 and Claude Opus 4.6 in parallel, de-duplicates findings, fixes all issues, repeats until both models return clean. User-configurable round cap (default 3).
-- **requesting-code-review** - Pre-review checklist against the plan
-- **receiving-code-review** - Responding to feedback
-
 **Collaboration** 
 - **brainstorming** - Socratic design refinement
 - **writing-plans** - Detailed implementation plans
 - **executing-plans** - Batch execution with checkpoints
 - **dispatching-parallel-agents** - Concurrent subagent workflows
+- **requesting-code-review** - Pre-review checklist
+- **receiving-code-review** - Responding to feedback
 - **using-git-worktrees** - Parallel development branches
 - **finishing-a-development-branch** - Merge/PR decision workflow
 - **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
